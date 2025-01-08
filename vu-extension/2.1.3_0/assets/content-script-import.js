@@ -1,0 +1,1 @@
+;(()=>{const runtime = chrome?.runtime || browser?.runtime; runtime ? import(runtime.getURL("assets/content-script.js")) : (document?.currentScript?.src && import(new URL("/assets/content-script.js", document.currentScript.src).href))})()
