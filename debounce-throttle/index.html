@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" id="input" />
+    <h1>Default: <span id="default"></span></h1>
+    <h1>Debounce: <span id="debounce"></span></h1>
+    <h1>Throttle: <span id="throttle"></span></h1>
+
+    <script>
+      const debounce = (cb, delay = 1000) => {
+        let time
+        return (...args) => {
+          clearInterval(time)
+          time = setTimeout(() => {
+            cb(...args)
+          }, delay)
+        }
+      }
+
+      const throttle = (cb, delay = 1000) => {
+        let timeout, lastRan
+
+        return (...args) => {
+          if (!lastRan) {
+            cb(...args)
+            lastRan = Date.now()
+            return
+          }
+
+          clearTimeout(timeout)
+          timeout = setTimeout(() => {
+            if (Date.now() - lastRan >= delay) {
+              cb(...args)
+              lastRan = Date.now()
+            }
+          }, delay - (Date.now() - lastRan))
+        }
+      }
+    </script>
+
+    <script>
+      const input = document.getElementById("input"),
+        debounceElement = document.getElementById("debounce"),
+        defaultElement = document.getElementById("default"),
+        throttleElement = document.getElementById("throttle")
+
+      const updateText = (element) => (txt) => (element.textContent = txt)
+
+      const updateDefault = updateText(defaultElement),
+        updateDebounce = debounce(updateText(debounceElement)),
+        updateThrottle = throttle(updateText(throttleElement))
+
+      input.addEventListener("input", (e) => {
+        updateDefault(e.target.value)
+        updateDebounce(e.target.value)
+        updateThrottle(e.target.value)
+      })
+    </script>
+  </body>
+</html>
